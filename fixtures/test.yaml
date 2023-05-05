@@ -1,0 +1,31 @@
+---
+baidu:
+  req:
+    method: GET
+    url: https://api.map.baidu.com/place/v2/search
+    headers:
+      user-agent: Aloha
+    params:
+      query: 人民政府 # 检索关键字。行政区划区域检索不支持多关键字检索。如果需要按POI分类进行检索，请将分类通过query参数进行设置，如query=美食
+      region: 北京 # 检索行政区划区域（增加区域内数据召回权重，如需严格限制召回数据在区域内，请搭配使用city_limit参数），可输入行政区划名或对应cityCode
+      city_limit: true # 区域数据召回限制，为true时，仅召回region对应区域内数据。
+      extensions_adcode: true # 是否召回国标行政区划编码，true（召回）、false（不召回）
+      output: json # 输出格式为json或者xml
+      scope: 1 # 检索结果详细程度。取值为1 或空，则返回基本信息；取值为2，返回检索POI详细信息
+      coord_type: bd09ll # 坐标类型，1（wgs84ll即GPS经纬度），2（gcj02ll即国测局经纬度坐标），3（bd09ll即百度经纬度坐标），4（bd09mc即百度米制坐标）
+      ret_coordtype: gcj02ll # 可选参数，添加后POI返回国测局经纬度坐标
+      page_size: 10 # 单次召回POI数量，默认为10条记录，最大返回20条。多关键字检索时，返回的记录数为关键字个数*page_size。
+      page_num: 0 # 分页页码，默认为0,0代表第一页，1代表第二页，以此类推。常与page_size搭配使用，仅当返回结果为poi时可以翻页。
+      ak: 7jS9nhFtIyqI7IvVmW3lTCSqPvZ9Skoy # 开发者的访问密钥，必填项。v2之前该属性为key。
+      photo_show: false # 是否输出图片信息：true(输出) 、false(不输出)
+  res:
+    skip_headers:
+      - set-cookie
+      - date
+      - via
+      - x-amz-cf-id
+    results:
+      results[0].name: 'POI 名称'
+      results[0].location.lat: '纬度坐标'
+      results[0].location.lng: '纬度坐标'
+      results[0].address: '纬度坐标'
