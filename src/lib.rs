@@ -3,7 +3,7 @@ mod config;
 mod utils;
 
 pub use cli::{parse_key_value, KeyValType};
-pub use utils::{process_error_output, write2csv};
+pub use utils::process_error_output;
 
 pub use config::{
     get_status_text, GeoCodingConfig, GeoCodingProfile, LoadConfig, RequestProfile,

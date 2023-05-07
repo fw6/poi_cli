@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use crate::utils::write2csv;
 use crate::ExtraArgs;
+use anyhow::Ok;
 use anyhow::{Context, Result};
 use serde::Deserialize;
 use serde::Serialize;
@@ -40,12 +40,19 @@ impl GeoCodingConfig {
 }
 
 impl GeoCodingProfile {
-    pub async fn query(&self, args: ExtraArgs, path: &Option<String>) -> Result<String> {
+    pub async fn query(&self, args: ExtraArgs) -> Result<serde_json::Value> {
+        let res = self.req.send(&args).await?;
+        Ok(res.get_results(&self.res).await?)
+    }
+
+    pub async fn query_with_city(&self, args: ExtraArgs, city: &str) -> Result<serde_json::Value> {
+        let mut args = args.clone();
+        args.query
+            .push(("address".into(), city.to_string() + "人民政府"));
+
         let res = self.req.send(&args).await?;
 
-        let result = res.get_results(&self.res).await?;
-
-        write2csv(result, path)
+        Ok(res.get_results(&self.res).await?)
     }
 }
 

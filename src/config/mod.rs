@@ -106,7 +106,7 @@ impl RequestProfile {
                 }
                 KeyValType::Query => {
                     for (key, value) in &value {
-                        query[key] = value.parse()?;
+                        query[key] = json!(value);
                     }
                 }
                 KeyValType::Body => {
@@ -226,15 +226,11 @@ impl ResponseExt {
         let res = self.0;
         let text = res.text().await?;
 
-        println!("{}", text);
-
         Ok(get_json_value(&text, &profile.pick_results)?)
     }
 }
 
 pub fn get_content_type(headers: &HeaderMap) -> Option<String> {
-    println!("headers:\n{:?}", headers);
-
     headers
         .get(CONTENT_TYPE)
         .and_then(|v| v.to_str().unwrap().split(';').next().map(|s| s.to_string()))
